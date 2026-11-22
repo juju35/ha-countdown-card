@@ -161,3 +161,10 @@ test("the editor writes only what differs from the defaults", () => {
   form.listeners["value-changed"]({ detail: { value: { type: "custom:countdown-card", days_ahead: 365, max_items: 4, calendars: ["calendar.family"] } } });
   assert.deepEqual(json(out), { type: "custom:countdown-card", calendars: ["calendar.family"] });
 });
+
+test("plurals: the Slovenian dual", async () => {
+  const sl = await make("countdown-card", { ...ALL, language: "sl" });
+  assert.deepEqual([1, 2, 3, 5, 102].map((n) => sl._tn("day", n)), ["1 dan", "2 dneva", "3 dnevi", "5 dni", "102 dneva"]);
+  assert.equal(sl._tn("in", 2), "Čez 2 dneva");
+  assert.equal(sl._tn("year", 2), "2 leti");
+});
