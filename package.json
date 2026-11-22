@@ -1,6 +1,6 @@
 {
   "name": "ha-countdown-card",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Lovelace card for Home Assistant counting down to birthdays, holidays, trips and anniversaries.",
   "repository": {
     "type": "git",
