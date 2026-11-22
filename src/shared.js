@@ -454,15 +454,20 @@ const cdType = (name, given) => {
   return ["anniversary", "birthday", "holiday", "trip"].find((t) => CD_MATCH[t].test(n)) || "event";
 };
 
-// Local midnight of a date: "YYYY-MM-DD", "MM-DD" (no year), an ISO date-time or a Date.
+// The days in a month (`m` from 0); a year unknown counts as a leap year, so a birthday on 02-29 is a date.
+const cdMonthDays = (y, m) => new Date(y ?? 2024, m + 1, 0).getDate();
+
+// Local midnight of a date: "YYYY-MM-DD", "MM-DD" (no year), an ISO date-time or a Date. A day the month does not
+// have ("02-30", "2025-02-29", "2024-13-01") is no date.
 const cdParse = (v) => {
   if (v == null || v === "") return null;
   if (v instanceof Date) return Number.isNaN(v.getTime()) ? null : { y: v.getFullYear(), m: v.getMonth(), d: v.getDate() };
   const s = String(v).trim();
+  const valid = (y, m, d) => (m >= 0 && m <= 11 && d >= 1 && d <= cdMonthDays(y, m) ? { y, m, d } : null);
   const md = /^(\d{1,2})-(\d{1,2})$/.exec(s);
-  if (md) return { y: null, m: Number(md[1]) - 1, d: Number(md[2]) };
+  if (md) return valid(null, Number(md[1]) - 1, Number(md[2]));
   const ymd = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(s);
-  if (ymd) return { y: Number(ymd[1]), m: Number(ymd[2]) - 1, d: Number(ymd[3]) };
+  if (ymd) return valid(Number(ymd[1]), Number(ymd[2]) - 1, Number(ymd[3]));
   const t = new Date(s);
   return Number.isNaN(t.getTime()) ? null : { y: t.getFullYear(), m: t.getMonth(), d: t.getDate() };
 };
@@ -475,6 +480,7 @@ const cdMidnight = (t) => {
 
 // The next occurrence of an event from `today` (local midnight, ms): { date, years } — the date itself when it is not
 // yearly (null once past), else this year's or next year's, with the years since the first one when its year is known.
+// A yearly 29 February comes on the 28th in the years without one.
 const cdNext = (p, yearly, today) => {
   if (!p) return null;
   const now = new Date(today);
@@ -482,9 +488,10 @@ const cdNext = (p, yearly, today) => {
     const t = new Date(p.y, p.m, p.d).getTime();
     return t >= today ? { date: t, years: null } : null;
   }
+  const on = (y) => new Date(y, p.m, Math.min(p.d, cdMonthDays(y, p.m))).getTime();
   let y = now.getFullYear();
-  let t = new Date(y, p.m, p.d).getTime();
-  if (t < today) t = new Date(++y, p.m, p.d).getTime();
+  let t = on(y);
+  if (t < today) t = on(++y);
   return { date: t, years: p.y != null && y > p.y ? y - p.y : null };
 };
 

@@ -66,6 +66,28 @@ test("calendars: all-day events end the day before their end date; one that has 
   assert.deepEqual([ev[1].date, ev[1].end], [TODAY, day(11, 23)]);
 });
 
+test("dates: a 29 February comes on the 28th without one, and impossible days are no dates", () => {
+  const leap = cd.cdParse("2000-02-29");
+  assert.deepEqual(json(cd.cdNext(leap, true, TODAY)), { date: day(2, 28, 2027), years: 27 });
+  assert.deepEqual(json(cd.cdParse("02-29")), { y: null, m: 1, d: 29 });
+  for (const bad of ["02-30", "2025-02-29", "2024-13-01", "04-31", "00-10"]) assert.equal(cd.cdParse(bad), null, bad);
+  assert.equal(cd.cdFromConfig({ name: "Typo", date: "02-30" }, TODAY), null);
+});
+
+test("calendars: an all-day event's last day across a clock change", () => {
+  const tz = process.env.TZ;
+  process.env.TZ = "Europe/Paris";
+  try {
+    // Paris moves to summer time on Sunday 28 March 2027: that day lasts 23 hours.
+    const [ev] = cd.cdFromCalendar("calendar.family", [{ summary: "Weekend away", start: { date: "2027-03-27" }, end: { date: "2027-03-29" } }], TODAY);
+    assert.equal(new Date(ev.end).getDate(), 28);
+    assert.equal(new Date(ev.end).getHours(), 0);
+  } finally {
+    if (tz === undefined) delete process.env.TZ;
+    else process.env.TZ = tz;
+  }
+});
+
 test("full card: the next event in big, then those coming up", async () => {
   const hass = makeHass();
   const card = await make("countdown-card", ALL, hass);
