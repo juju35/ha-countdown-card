@@ -24,7 +24,7 @@ If applicable, add screenshots to help explain your problem.
 **Environment:**
 - Home Assistant version:
 - Browser:
-- HACS version:
+- Marketplace version:
 - Card version:
 - Card (countdown-card or countdown-mini-card):
 - Event sources (calendars, Anniversaries, date helpers, `events`):
