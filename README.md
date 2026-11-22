@@ -120,7 +120,7 @@ calendars:
 | `calendars` | list | | Both: calendars whose events over the next `days_ahead` days are counted down |
 | `entities` | list | the Anniversaries sensors, when nothing else is set | Both: date helpers, `timestamp` sensors, Anniversaries sensors |
 | `events` | list | | Both, YAML only: events written in the card — `name`, `date` (`YYYY-MM-DD` or `MM-DD`), `type` (`birthday`, `holiday`, `trip`, `anniversary`, `event`; else found in the name), `yearly` (default: a birthday, an anniversary or a date without a year), `end` (the last day), `icon` |
-| `days_ahead` | number | `365` | Both: how far to look for events |
+| `days_ahead` | number | `365` | Both: how far to look for events (1 to 1500; calendars are asked for 400 days at most) |
 | `max_items` | number | `4` | Both: the next event and those coming up |
 | `illustration` | boolean | `true` | Both: the illustrated header (`false`: the classic header) |
 | `illustration_theme` | string | `auto` | Both: `auto` (follows the Home Assistant theme: night with a dark theme, day with a light theme), `day` or `night` |
@@ -161,7 +161,7 @@ calendars:
 
 ## How it works
 
-- **Calendars**: their events from today to `days_ahead` days ahead, through Home Assistant's calendar API, fetched at first, every 30 minutes and at each new day; an all-day event's end is the day before its end date, and an event of several days that has started counts as today
+- **Calendars**: their events from today to `days_ahead` days ahead (400 at most), through Home Assistant's calendar API, fetched at first, every 30 minutes and at each new day; an all-day event's end is the day before its end date, and an event of several days that has started counts as today
 - **Anniversaries**: the sensor's `next_date` (else its `date` this year or next) and `years_at_next_anniversary`
 - **Date helpers and `timestamp` sensors**: their date; a birthday or an anniversary (by its name) comes back every year with the years since its first year
 - **`events`**: as written; yearly by default for a birthday, an anniversary or a date without a year

@@ -4,6 +4,9 @@
  * https://github.com/juju35/ha-countdown-card
  */
 
+// The calendars are asked for their events over this many days at most (`days_ahead` beyond it still counts for the
+// entities and the `events` list).
+const CD_FETCH_DAYS = 400;
 // Colour and icon of each type of event.
 const CD_COLORS = { birthday: "#d6336c", holiday: "#1c7ed6", trip: "#0c8599", anniversary: "#7048e8", event: "#e67700" };
 const CD_ICONS = { birthday: "mdi:cake-variant", holiday: "mdi:beach", trip: "mdi:airplane", anniversary: "mdi:gift", event: "mdi:calendar-star" };
@@ -145,7 +148,8 @@ class CountdownCard extends RcCard {
     this._busy = true;
     const today = cdMidnight(Date.now());
     const start = new Date(today).toISOString();
-    const end = new Date(today + this._ahead() * 86400000).toISOString();
+    // At most CD_FETCH_DAYS ahead: a daily recurring event over 1500 days would bring back thousands of occurrences.
+    const end = new Date(today + Math.min(this._ahead(), CD_FETCH_DAYS) * 86400000).toISOString();
     try {
       const lists = await Promise.all(ids.map((id) => Promise.resolve(h.callApi("GET", `calendars/${id}?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`)).catch(() => [])));
       this._cal = { day: today, key: ids.join(","), lists: Object.fromEntries(ids.map((id, i) => [id, lists[i]])) };

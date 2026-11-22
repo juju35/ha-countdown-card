@@ -88,6 +88,13 @@ test("calendars: an all-day event's last day across a clock change", () => {
   }
 });
 
+test("calendars: asked for 400 days at most, whatever days_ahead", async () => {
+  const hass = makeHass();
+  await make("countdown-card", { ...ALL, days_ahead: 1500 }, hass);
+  const q = new URLSearchParams(hass.api[0][1].split("?")[1]);
+  assert.equal(Math.round((Date.parse(q.get("end")) - Date.parse(q.get("start"))) / 86400000), 400);
+});
+
 test("full card: the next event in big, then those coming up", async () => {
   const hass = makeHass();
   const card = await make("countdown-card", ALL, hass);
