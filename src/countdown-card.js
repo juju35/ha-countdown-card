@@ -232,7 +232,7 @@ class CountdownCard extends RcCard {
     return `
       <div class="banner${night ? " night" : ""}">
         <div class="head${nav ? " nav" : ""}"${nav ? ' role="link" tabindex="0"' : ""}>
-          <div class="badge"><ha-icon icon="${m.next ? CD_ICONS[m.next.type] : "mdi:calendar-star"}"></ha-icon></div>
+          <div class="badge"><ha-icon icon="${rcEsc(m.next ? m.next.icon || CD_ICONS[m.next.type] : "mdi:calendar-star")}"></ha-icon></div>
           <div class="tt"><div class="trow"><div class="title">${rcEsc(m.name)}</div>${chip}</div>${sub}</div>
         </div>
         <svg class="room" viewBox="0 0 200 80" preserveAspectRatio="xMaxYMax slice" aria-hidden="true">${scene}</svg>
@@ -292,7 +292,7 @@ class CountdownCard extends RcCard {
       c.illustration !== false
         ? this._banner(m, this._sub(m), scene, status)
         : `<div class="head${c.navigation_path ? " nav" : ""}"${c.navigation_path ? ' role="link" tabindex="0"' : ""}>
-            <div class="badge"><ha-icon icon="${m.next ? CD_ICONS[m.next.type] : "mdi:calendar-star"}"></ha-icon></div>
+            <div class="badge"><ha-icon icon="${rcEsc(m.next ? m.next.icon || CD_ICONS[m.next.type] : "mdi:calendar-star")}"></ha-icon></div>
             <div class="tt"><div class="trow"><div class="title">${rcEsc(m.name)}</div><span class="pill" title="${rcEsc(status)}" aria-label="${rcEsc(status)}"><span class="pt">${rcEsc(status)}</span></span></div>${this._sub(m)}</div>
           </div>`;
     const rest = m.items.slice(1);
