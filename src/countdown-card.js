@@ -305,7 +305,7 @@ class CountdownCard extends RcCard {
     const body = m.next
       ? `${this._hero(m.next)}${rest.length ? `<div class="box up"><div class="uh">${rcEsc(this._t("coming_up"))}</div>${rest.map((e) => this._row(e)).join("")}</div>` : ""}`
       : `<div class="box none">${rcEsc(this._t("nothing"))}</div>`;
-    this._paint(level, head + body, "", `${m.state === "today" ? " today" : ""}${dark ? " dk" : ""}`);
+    this._paint(level, head + body, "", ` st-${m.state}${m.state === "today" ? " today" : ""}${dark ? " dk" : ""}`);
     this._fitPill();
   }
 
@@ -363,6 +363,9 @@ class CountdownCard extends RcCard {
               background: linear-gradient(180deg, #fff0f5 0%, #f8e1ea 100%);
               --bt: #0d2a45; --bs: #3b5b78; --ic: color-mix(in srgb, var(--c) 85%, #10283f); --sw: min(200px, 56%); }
     .banner.night { background: linear-gradient(180deg, #241a2b 0%, #2f2238 100%); --bt: #fff; --bs: rgba(255,255,255,.78); --ic: color-mix(in srgb, var(--c) 72%, #fff); }
+    /* The badge's icon: the event's colour today and in the coming week, grey further off or with nothing coming. */
+    .st-later .banner, .st-none .banner { --ic: #6b7680; }
+    .st-later .banner.night, .st-none .banner.night { --ic: #a7b0b8; }
     .banner .head { position: relative; z-index: 1; flex: 1; min-width: 0; height: 80px; box-sizing: border-box;
                     padding: 0 calc(var(--sw) + 4px) 0 14px; flex-wrap: nowrap; }
     .banner .head::after { content: none; }
@@ -468,7 +471,7 @@ class CountdownMiniCard extends rcMini(CountdownCard, "countdown-mini-card", "")
     const page = e ? cdPage({ night, month: this._date(e.date, { month: "short" }).replace(".", "").toUpperCase(), day: this._date(e.date, { day: "numeric" }), type: e.type }) : "";
     const c = this._config;
     this.shadowRoot.innerHTML = `<style>${RC_BASE_STYLES}${this.constructor.styles}</style>
-      <ha-card class="lvl-${e ? e.type : "none"} bn${dark ? " dk" : ""}">${this._banner(m, `<div class="rs">${chips}</div>`, page, status)}</ha-card>`;
+      <ha-card class="lvl-${e ? e.type : "none"} st-${m.state} bn${dark ? " dk" : ""}">${this._banner(m, `<div class="rs">${chips}</div>`, page, status)}</ha-card>`;
     const root = this.shadowRoot;
     if (c.navigation_path) rcBindNav(root.querySelector(".head"), c.navigation_path);
     for (const el of root.querySelectorAll(".r[data-id]")) el.addEventListener("click", () => rcMoreInfo(this, el.dataset.id));

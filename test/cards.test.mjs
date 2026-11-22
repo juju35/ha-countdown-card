@@ -118,14 +118,14 @@ test("full card: the next event in big, then those coming up", async () => {
   assert.match(html, /<span class="hn">Sam&#39;s birthday — turns 9<\/span>/);
   assert.match(html, /<span class="rp">27 days<\/span>/);
   assert.match(html, /Sat, Dec 19 · 16 days/, "the holidays last 16 days");
-  assert.match(html, /<ha-card class="lvl-birthday">/);
+  assert.match(html, /<ha-card class="lvl-birthday st-soon">/);
 });
 
 test("today, tomorrow and nothing coming up", async () => {
   const today = await make("countdown-card", { events: [{ name: "Party", date: "2026-11-22" }] });
   assert.equal(today._items.state, "today");
   assert.match(today.shadowRoot.innerHTML, /<span class="bn0">Today!<\/span>/);
-  assert.match(today.shadowRoot.innerHTML, /class="lvl-event today"/);
+  assert.match(today.shadowRoot.innerHTML, /class="lvl-event st-today today"/);
   const tomorrow = await make("countdown-card", { events: [{ name: "Party", date: "2026-11-23" }] });
   assert.match(tomorrow.shadowRoot.innerHTML, /<span class="bpt">Tomorrow<\/span>/);
   assert.match(tomorrow.shadowRoot.innerHTML, /<span class="bn">1<\/span><span class="bu">day<\/span>/);
@@ -149,7 +149,7 @@ test("plurals: the few form where the language has one", async () => {
 test("mini card: when, the name and the age as chips, and the calendar page", async () => {
   const card = await make("countdown-mini-card", ALL);
   const html = card.shadowRoot.innerHTML;
-  assert.match(html, /<ha-card class="lvl-birthday bn">/);
+  assert.match(html, /<ha-card class="lvl-birthday st-soon bn">/);
   assert.match(html, /<span class="bpt">In 3 days<\/span>/);
   assert.match(html, /<span>Sam&#39;s birthday<\/span>/);
   assert.match(html, /<span>turns 9<\/span>/);
