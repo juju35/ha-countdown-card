@@ -25,9 +25,10 @@ const CD_REFRESH = 30 * 60 * 1000;
 
 // ── Banner ───────────────────────────────────────────────────────────────────
 // The illustrated header's scene: 200 × 80, drawn to the banner's right edge. Bunting across the top, a calendar page
-// showing the next event's day, a present and two balloons that sway; confetti fall on the day itself. By night (the
-// dark theme), a darker room.
-const cdScene = ({ night, day, today, animate }) => {
+// showing the next event's day on a band of its type's colour, a present and two balloons that sway; confetti fall on
+// the day itself. By night (the dark theme), a darker room.
+const cdScene = ({ night, day, today, animate, type }) => {
+  const band = CD_COLORS[type] || CD_COLORS.birthday;
   const flags = ["#e64980", "#f59f00", "#1c7ed6", "#37b24d", "#7048e8"];
   const bunting = Array.from({ length: 9 }, (_, i) => {
     const x = 14 + i * 20;
@@ -49,7 +50,7 @@ const cdScene = ({ night, day, today, animate }) => {
     : "";
   return `<path d="M8 6 Q100 20 194 6" fill="none" stroke="${night ? "#8c7f95" : "#b08968"}" stroke-width=".8"/>${bunting}
     <g class="page"><rect x="62" y="42" width="26" height="32" rx="3" fill="${night ? "#3b3141" : "#fff"}" stroke="${night ? "#524659" : "#e2d6dc"}"/>
-      <rect x="62" y="42" width="26" height="8" rx="3" fill="#d6336c"/><rect x="62" y="47" width="26" height="3" fill="#d6336c"/>
+      <rect x="62" y="42" width="26" height="8" rx="3" fill="${band}"/><rect x="62" y="47" width="26" height="3" fill="${band}"/>
       <text x="75" y="68" text-anchor="middle" font-family="Roboto,sans-serif" font-size="13" font-weight="700" fill="${night ? "#fff" : "#0d2a45"}">${rcEsc(day)}</text></g>
     <g class="gift"><rect x="98" y="54" width="26" height="20" fill="#7048e8"/><rect x="96" y="49" width="30" height="6" fill="#845ef7"/>
       <rect x="108" y="49" width="6" height="25" fill="#fcc419"/><path d="M111 49 q-8 -8 -10 -2 q2 4 10 2 q8 -8 10 -2 q-2 4 -10 2" fill="none" stroke="#fcc419" stroke-width="2"/></g>
@@ -287,7 +288,7 @@ class CountdownCard extends RcCard {
     if (!this._changed([m.items, m.state, dark, night])) return;
     const status = m.next ? this._when(m.next.days) : this._t("st_none");
     const level = m.next ? m.next.type : "none";
-    const scene = cdScene({ night, day: m.next ? this._date(m.next.date, { day: "numeric" }) : "", today: m.state === "today", animate: this._animate() });
+    const scene = cdScene({ night, day: m.next ? this._date(m.next.date, { day: "numeric" }) : "", today: m.state === "today", animate: this._animate(), type: m.next?.type });
     const head =
       c.illustration !== false
         ? this._banner(m, this._sub(m), scene, status)
