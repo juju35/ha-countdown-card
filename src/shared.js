@@ -535,8 +535,9 @@ const cdFromCalendar = (id, list, today) =>
       if (!s) return null;
       const date = new Date(s.y, s.m, s.d).getTime();
       const e = cdParse(ev.end?.date || ev.end?.dateTime);
-      // An all-day event's end is the day after its last day.
-      const end = e ? new Date(e.y, e.m, e.d).getTime() - (ev.end?.date ? 86400000 : 0) : null;
+      // An all-day event's end is the day after its last day: one calendar day back (never 24 h, a day of 23 h on a
+      // daylight saving change would end the day before).
+      const end = e ? new Date(e.y, e.m, e.d - (ev.end?.date ? 1 : 0)).getTime() : null;
       // An event of several days that has started counts as today.
       const shown = date < today && end != null && end >= today ? today : date;
       return shown < today ? null : { name: ev.summary || "", type: cdType(ev.summary), date: shown, years: null, end: end && end > shown ? end : null, id, icon: null };
