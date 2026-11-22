@@ -276,9 +276,10 @@ class CountdownCard extends RcCard {
     </button>`;
   }
 
+  // The next event's date alone: its name is in big right under the banner.
   _sub(m) {
     if (!m.next || this._config.show_subtitle === false) return "";
-    return `<div class="subt">${rcEsc(this._t("next", { name: m.next.name, date: this._date(m.next.date) }))}</div>`;
+    return `<div class="subt">${rcEsc(this._date(m.next.date))}</div>`;
   }
 
   _draw(m) {

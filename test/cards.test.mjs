@@ -106,7 +106,7 @@ test("full card: the next event in big, then those coming up", async () => {
   assert.equal(m.state, "soon");
   const html = card.shadowRoot.innerHTML;
   assert.match(html, /<span class="bpt">In 3 days<\/span>/);
-  assert.match(html, /<div class="subt">Next: Sam&#39;s birthday on Wed, Nov 25<\/div>/);
+  assert.match(html, /<div class="subt">Wed, Nov 25<\/div>/);
   assert.match(html, /<span class="bn">3<\/span><span class="bu">days<\/span>/);
   assert.match(html, /<span class="hn">Sam&#39;s birthday — turns 9<\/span>/);
   assert.match(html, /<span class="rp">27 days<\/span>/);

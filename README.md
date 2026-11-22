@@ -115,7 +115,7 @@ calendars:
 |---|---|---|---|
 | `title` | string | `Countdown` | Both: card title |
 | `show_title` | boolean | `true` | Both: show the title |
-| `show_subtitle` | boolean | `true` | The next event and its date under the title |
+| `show_subtitle` | boolean | `true` | The next event's date under the title |
 | `navigation_path` | string | | Both: a tap on the header opens this dashboard path |
 | `calendars` | list | | Both: calendars whose events over the next `days_ahead` days are counted down |
 | `entities` | list | the Anniversaries sensors, when nothing else is set | Both: date helpers, `timestamp` sensors, Anniversaries sensors |
