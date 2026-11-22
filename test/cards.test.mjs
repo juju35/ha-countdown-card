@@ -168,3 +168,13 @@ test("plurals: the Slovenian dual", async () => {
   assert.equal(sl._tn("in", 2), "Čez 2 dneva");
   assert.equal(sl._tn("year", 2), "2 leti");
 });
+
+test("plurals: the age a birthday reaches, in Polish, Romanian and Russian", async () => {
+  const card = (language) => make("countdown-card", { ...ALL, language });
+  const pl = await card("pl");
+  assert.deepEqual([1, 3, 5, 22].map((n) => pl._tn("turns", n)), ["kończy 1 rok", "kończy 3 lata", "kończy 5 lat", "kończy 22 lata"]);
+  const ro = await card("ro");
+  assert.deepEqual([1, 9, 20].map((n) => ro._tn("turns", n)), ["împlinește 1 an", "împlinește 9 ani", "împlinește 20 de ani"]);
+  const ru = await card("ru");
+  assert.deepEqual([21, 3, 9].map((n) => ru._tn("turns", n)), ["исполняется 21 год", "исполняется 3 года", "исполняется 9 лет"]);
+});

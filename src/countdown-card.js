@@ -216,7 +216,7 @@ class CountdownCard extends RcCard {
 
   // What follows an event's date: the age reached, the years, how many days it lasts.
   _extra(e) {
-    if (e.years && e.type === "birthday") return this._t("turns", { n: e.years });
+    if (e.years && e.type === "birthday") return this._tn("turns", e.years);
     if (e.years) return this._tn("year", e.years, { n: e.years });
     if (e.end && e.end > e.date) return this._tn("day", Math.round((e.end - e.date) / 86400000) + 1, { n: Math.round((e.end - e.date) / 86400000) + 1 });
     return "";
