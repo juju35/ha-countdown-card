@@ -48,8 +48,8 @@ The card reads the events of any calendar, date helpers and date sensors. Among 
 |:---:|---|---|
 |  | [Local Calendar](https://www.home-assistant.io/integrations/local_calendar/) (built in) | Events stored in Home Assistant |
 | <img src="https://raw.githubusercontent.com/juju35/ha-countdown-card/main/images/google.png" alt="Google Calendar" height="16"> | [Google Calendar](https://www.home-assistant.io/integrations/google/) (built in) | Google calendars |
-| <img src="https://raw.githubusercontent.com/juju35/ha-countdown-card/main/images/caldav.png" alt="CalDAV" height="24"> | [CalDAV](https://www.home-assistant.io/integrations/caldav/) (built in) | iCloud, Nextcloud and other CalDAV calendars |
-| <img src="https://raw.githubusercontent.com/juju35/ha-countdown-card/main/images/anniversaries.png" alt="Anniversaries" height="24"> | [Anniversaries](https://github.com/pinkywafer/Anniversaries) (Marketplace) | Birthdays and anniversaries with the years |
+| <img src="https://raw.githubusercontent.com/juju35/ha-countdown-card/main/images/caldav.png" alt="CalDAV" height="16"> | [CalDAV](https://www.home-assistant.io/integrations/caldav/) (built in) | iCloud, Nextcloud and other CalDAV calendars |
+| <img src="https://raw.githubusercontent.com/juju35/ha-countdown-card/main/images/anniversaries.png" alt="Anniversaries" height="16"> | [Anniversaries](https://github.com/pinkywafer/Anniversaries) (Marketplace) | Birthdays and anniversaries with the years |
 |  | [Date helpers](https://www.home-assistant.io/integrations/input_datetime/) (built in) | `input_datetime` helpers and `timestamp` sensors |
 
 ## Installation
@@ -80,7 +80,7 @@ The Marketplace registers the dashboard resource for you.
 
 ## Configuration
 
-Every option but `events` is in the visual editor. In YAML:
+Every option is in the visual editor; `events`, a list, is written as YAML in its advanced section. In YAML:
 
 ```yaml
 type: custom:countdown-card
@@ -119,7 +119,7 @@ calendars:
 | `navigation_path` | string | | Both: a tap on the header opens this dashboard path |
 | `calendars` | list | | Both: calendars whose events over the next `days_ahead` days are counted down |
 | `entities` | list | the Anniversaries sensors, when nothing else is set | Both: date helpers, `timestamp` sensors, Anniversaries sensors |
-| `events` | list | | Both, YAML only: events written in the card — `name`, `date` (`YYYY-MM-DD` or `MM-DD`), `type` (`birthday`, `holiday`, `trip`, `anniversary`, `event`; else found in the name), `yearly` (default: a birthday, an anniversary or a date without a year), `end` (the last day), `icon` |
+| `events` | list | | Both, as YAML (in the editor's advanced section too): events written in the card — `name`, `date` (`YYYY-MM-DD` or `MM-DD`), `type` (`birthday`, `holiday`, `trip`, `anniversary`, `event`; else found in the name), `yearly` (default: a birthday, an anniversary or a date without a year), `end` (the last day), `icon` |
 | `days_ahead` | number | `365` | Both: how far to look for events (1 to 1500; calendars are asked for 400 days at most) |
 | `max_items` | number | `4` | Both: the next event and those coming up |
 | `illustration` | boolean | `true` | Both: the illustrated header (`false`: the classic header) |
@@ -164,9 +164,11 @@ calendars:
 - **Calendars**: their events from today to `days_ahead` days ahead (400 at most), through Home Assistant's calendar API, fetched at first, every 30 minutes and at each new day; an all-day event's end is the day before its end date, and an event of several days that has started counts as today
 - **Anniversaries**: the sensor's `next_date` (else its `date` this year or next) and `years_at_next_anniversary`
 - **Date helpers and `timestamp` sensors**: their date; a birthday or an anniversary (by its name) comes back every year with the years since its first year
-- **`events`**: as written; yearly by default for a birthday, an anniversary or a date without a year
+- **`events`**: as written; yearly by default for a birthday, an anniversary or a date without a year; a 29 February comes on the 28th in the years without one, and a day the month does not have (*02-30*) is ignored
 - **Type**: `type` when given, else the name: a wedding first, then *anniversary*, *birthday*, *holiday*, *trip* in the 22 languages, else *event*
 - **Days**: whole days between local midnights (a daylight saving change never counts)
+- **Header icon**: in the event's colour today and in the coming week, grey further off
+- **Refresh**: the card redraws on each change of its entities; the calendars are fetched again every 30 minutes and at each new day
 - **Read only**: the card calls no action
 
 ## Development
