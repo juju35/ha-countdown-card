@@ -419,6 +419,8 @@ class CountdownCard extends RcCard {
     @container (max-width: 260px) { .banner, ha-card.bn > .banner { --sw: 70px; --sk: .5; } }
     /* The mini card's calendar page stays whole: it is drawn at the right, clear of the zoom button. */
     ha-card.bn > .banner .room { right: 34px; }
+    /* Under 340 px the chips need the room: the calendar page is hidden, as the other mini cards hide theirs. */
+    @container (max-width: 340px) { ha-card.bn > .banner .room { display: none; } ha-card.bn > .banner .head { padding-right: 34px; } }
     /* The chips that do not fit wrap to a second line, hidden: never a chip cut to "R…". */
     .banner .rs { display: flex; flex-wrap: wrap; gap: 4px; height: 20px; margin: 3px 0 0 -2px; min-width: 0; overflow: hidden; }
     .banner .r { flex: none; line-height: 20px; padding: 0 7px; color: var(--bt); background: rgba(255,255,255,.7); }
