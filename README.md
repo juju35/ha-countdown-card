@@ -46,11 +46,11 @@ The card reads the events of any calendar, date helpers and date sensors. Among 
 
 | | Integration | What the cards show |
 |:---:|---|---|
-|  | [Local Calendar](https://www.home-assistant.io/integrations/local_calendar/) (built in) | Events stored in Home Assistant |
+| <img src="https://raw.githubusercontent.com/juju35/ha-countdown-card/main/images/home_assistant.png" alt="" height="16"> | [Local Calendar](https://www.home-assistant.io/integrations/local_calendar/) (built in) | Events stored in Home Assistant |
 | <img src="https://raw.githubusercontent.com/juju35/ha-countdown-card/main/images/google.png" alt="Google Calendar" height="16"> | [Google Calendar](https://www.home-assistant.io/integrations/google/) (built in) | Google calendars |
 | <img src="https://raw.githubusercontent.com/juju35/ha-countdown-card/main/images/caldav.png" alt="CalDAV" height="16"> | [CalDAV](https://www.home-assistant.io/integrations/caldav/) (built in) | iCloud, Nextcloud and other CalDAV calendars |
 | <img src="https://raw.githubusercontent.com/juju35/ha-countdown-card/main/images/anniversaries.png" alt="Anniversaries" height="16"> | [Anniversaries](https://github.com/pinkywafer/Anniversaries) (Marketplace) | Birthdays and anniversaries with the years |
-|  | [Date helpers](https://www.home-assistant.io/integrations/input_datetime/) (built in) | `input_datetime` helpers and `timestamp` sensors |
+| <img src="https://raw.githubusercontent.com/juju35/ha-countdown-card/main/images/home_assistant.png" alt="" height="16"> | [Date helpers](https://www.home-assistant.io/integrations/input_datetime/) (built in) | `input_datetime` helpers and `timestamp` sensors |
 
 ## Installation
 
