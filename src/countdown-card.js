@@ -280,10 +280,11 @@ class CountdownCard extends RcCard {
     </button>`;
   }
 
-  // The next event's date alone: its name is in big right under the banner.
+  // Today's date: the next event's name, date and days left are all in big right under the banner, so the header
+  // repeats none of them (on the event's day, today's date would be its date: no subtitle then).
   _sub(m) {
-    if (!m.next || this._config.show_subtitle === false) return "";
-    return `<div class="subt">${rcEsc(this._date(m.next.date))}</div>`;
+    if (!m.next?.days || this._config.show_subtitle === false) return "";
+    return `<div class="subt">${rcEsc(this._date(Date.now()))}</div>`;
   }
 
   _draw(m) {
@@ -291,15 +292,14 @@ class CountdownCard extends RcCard {
     const dark = this._dark();
     const night = this._night();
     if (!this._changed([m.items, m.state, dark, night])) return;
-    const status = m.next ? this._when(m.next.days) : this._t("st_none");
     const level = m.next ? m.next.type : "none";
     const scene = cdScene({ night, day: m.next ? this._date(m.next.date, { day: "numeric" }) : "", today: m.state === "today", animate: this._animate(), type: m.next?.type });
     const head =
       c.illustration !== false
-        ? this._banner(m, this._sub(m), scene, status)
+        ? this._banner(m, this._sub(m), scene)
         : `<div class="head${c.navigation_path ? " nav" : ""}"${c.navigation_path ? ' role="link" tabindex="0"' : ""}>
             <div class="badge"><ha-icon icon="${rcEsc(m.next ? m.next.icon || CD_ICONS[m.next.type] : "mdi:calendar-star")}"></ha-icon></div>
-            <div class="tt"><div class="trow"><div class="title">${rcEsc(m.name)}</div><span class="pill" title="${rcEsc(status)}" aria-label="${rcEsc(status)}"><span class="pt">${rcEsc(status)}</span></span></div>${this._sub(m)}</div>
+            <div class="tt"><div class="trow"><div class="title">${rcEsc(m.name)}</div></div>${this._sub(m)}</div>
           </div>`;
     const rest = m.items.slice(1);
     const body = m.next
@@ -419,12 +419,15 @@ class CountdownCard extends RcCard {
     @container (max-width: 260px) { .banner, ha-card.bn > .banner { --sw: 70px; --sk: .5; } }
     /* The mini card's calendar page stays whole: it is drawn at the right, clear of the zoom button. */
     ha-card.bn > .banner .room { right: 34px; }
-    /* Under 340 px the chips need the room: the calendar page is hidden, as the other mini cards hide theirs. */
+    /* The calendar page is narrow: the mini card's text keeps the rest of the banner, so the status pill stays on the
+       title row and the card reads on two lines. */
+    ha-card.bn > .banner { --sw: 72px; }
+    /* Under 340 px the event's line needs the room: the calendar page is hidden, as the other mini cards hide theirs. */
     @container (max-width: 340px) { ha-card.bn > .banner .room { display: none; } ha-card.bn > .banner .head { padding-right: 34px; } }
-    /* The chips that do not fit wrap to a second line, hidden: never a chip cut to "R…". */
-    .banner .rs { display: flex; flex-wrap: wrap; gap: 4px; height: 20px; margin: 3px 0 0 -2px; min-width: 0; overflow: hidden; }
-    .banner .r { flex: none; line-height: 20px; padding: 0 7px; color: var(--bt); background: rgba(255,255,255,.7); }
-    .banner.night .r { background: rgba(10,20,40,.4); }
+    /* The mini card's second line: the event's name (and the age reached), plain text cut with an ellipsis. */
+    .banner .evt { all: unset; display: block; min-width: 0; color: var(--bs); font-size: 13px; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .banner .evt[data-id] { cursor: pointer; }
+    .banner .evt:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; border-radius: 4px; }
   `;
 }
 
@@ -468,15 +471,16 @@ class CountdownMiniCard extends rcMini(CountdownCard, "countdown-mini-card", "")
     if (!this._changed(["mini", m.next, night, dark])) return;
     const e = m.next;
     const status = e ? this._when(e.days) : this._t("st_none");
-    const chip = (text) => `<button class="r"${e?.id ? ` data-id="${rcEsc(e.id)}"` : ""} title="${rcEsc(text)}"><span>${rcEsc(text)}</span></button>`;
-    const chips = e ? [chip(e.name), e.years ? chip(this._extra(e)) : ""].join("") : chip(this._t("nothing"));
+    // The event's name and the age reached on one line, as the full card's hero writes them.
+    const text = e ? (e.years ? `${e.name} — ${this._extra(e)}` : e.name) : this._t("nothing");
+    const line = `<button class="subt evt"${e?.id ? ` data-id="${rcEsc(e.id)}"` : ""} title="${rcEsc(text)}">${rcEsc(text)}</button>`;
     const page = e ? cdPage({ night, month: this._date(e.date, { month: "short" }).replace(".", "").toUpperCase(), day: this._date(e.date, { day: "numeric" }), type: e.type }) : "";
     const c = this._config;
     this.shadowRoot.innerHTML = `<style>${RC_BASE_STYLES}${this.constructor.styles}</style>
-      <ha-card class="lvl-${e ? e.type : "none"} st-${m.state} bn${dark ? " dk" : ""}">${this._banner(m, `<div class="rs">${chips}</div>`, page, status)}</ha-card>`;
+      <ha-card class="lvl-${e ? e.type : "none"} st-${m.state} bn${dark ? " dk" : ""}">${this._banner(m, line, page, status)}</ha-card>`;
     const root = this.shadowRoot;
     if (c.navigation_path) rcBindNav(root.querySelector(".head"), c.navigation_path);
-    for (const el of root.querySelectorAll(".r[data-id]")) el.addEventListener("click", () => rcMoreInfo(this, el.dataset.id));
+    for (const el of root.querySelectorAll(".evt[data-id]")) el.addEventListener("click", () => rcMoreInfo(this, el.dataset.id));
     this._fitPill();
   }
 }
