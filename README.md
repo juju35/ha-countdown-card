@@ -36,7 +36,7 @@ A Lovelace card that **counts down** to birthdays, holidays and trips: the days 
 - **Every kind of source**: calendars, Anniversaries sensors, date helpers, timestamp sensors, and a list of events in the card's config (yearly or not)
 - **Types found in the name** when not given — *birthday*, *holiday*, *trip*, *anniversary* — in the 22 languages of the card (*anniversaire de mariage* is a wedding anniversary, *anniversaire* a birthday)
 - **Illustrated header**: bunting, a calendar page showing the next event's day, a present and two balloons that sway; confetti fall on the day itself; the dark theme darkens the room
-- **Mini card**: when, the event's name and the age reached as chips, and its calendar page with the month in the event's colour; its zoom button opens the full card in place
+- **Mini card**: two lines — the title with when, then the event's name and the age reached — and its calendar page with the month in the event's colour; its zoom button opens the full card in place
 - **Tap an event** from an entity to open its details
 - Visual editor for both cards, light and dark themes, 22 languages, no external dependency
 
@@ -115,7 +115,7 @@ calendars:
 |---|---|---|---|
 | `title` | string | `Countdown` | Both: card title |
 | `show_title` | boolean | `true` | Both: show the title |
-| `show_subtitle` | boolean | `true` | The next event's date under the title |
+| `show_subtitle` | boolean | `true` | Today's date under the title (the event's own date and days left are in big under the header) |
 | `navigation_path` | string | | Both: a tap on the header opens this dashboard path |
 | `calendars` | list | | Both: calendars whose events over the next `days_ahead` days are counted down |
 | `entities` | list | the Anniversaries sensors, when nothing else is set | Both: date helpers, `timestamp` sensors, Anniversaries sensors |

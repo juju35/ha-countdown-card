@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.4 - 2026-11-26
+
+### Fixes
+- Full card: the header no longer repeats what the big event under it shows. The status pill (*In 3 days*) is gone, and the subtitle is today's date instead of the event's date (none on the event's day).
+- Mini card: it reads on two lines. The event's name and the age reached are one line of text instead of two chips, and the status pill stays on the title row instead of a third line (the calendar page keeps only the room it needs).
+- Icons are centred in their badges and in the zoom / collapse button. Home Assistant's `<ha-icon>` is inline, so it sat on a line of text, a few pixels off; the cards now lay it out as a box of the icon's size.
+
 ## 1.0.3 - 2026-11-24
 
 ### Maintenance

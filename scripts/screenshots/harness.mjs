@@ -58,7 +58,9 @@ customElements.define("ha-icon", class extends HTMLElement {
     // Like Home Assistant's <ha-icon>: its display comes from its own :host rule, which the card's styles override
     // (".head button.chip .off { display: none }"); an inline style would win over them.
     if (!this.shadowRoot) this.attachShadow({ mode: "open" });
-    this.shadowRoot.innerHTML = '<style>:host{display:inline-flex}</style><svg viewBox="0 0 24 24" style="width:var(--mdc-icon-size,24px);height:var(--mdc-icon-size,24px);fill:currentColor"><path d="' + path + '"/></svg>';
+    // Its host is inline and its <ha-svg-icon> an inline-flex box aligned on the text's middle, as in Home Assistant:
+    // an icon the card leaves inline sits on a line box and shows off-centre here as it does there.
+    this.shadowRoot.innerHTML = '<style>:host{fill:currentColor}span{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;width:var(--mdc-icon-size,24px);height:var(--mdc-icon-size,24px)}svg{width:100%;height:100%}</style><span><svg viewBox="0 0 24 24"><path d="' + path + '"/></svg></span>';
   }
 });`;
 

@@ -20,6 +20,9 @@ export const RC_BASE_STYLES = `
      or a min-width in px would be a minimum there, and the card would overflow. */
   :host::before { content: ""; display: grid; grid-template-columns: minmax(0, 344px); height: 0; }
   ha-card { padding: 12px; overflow: hidden; container-type: inline-size; }
+  /* Home Assistant's <ha-icon> is inline: in a round badge or button it would sit on a line of text, a few px off the
+     centre and taller than the icon. As a flex box it is exactly the icon's size, centred by its container. */
+  ha-icon { display: inline-flex; line-height: 0; }
   ha-card.lvl-alert { box-shadow: 0 0 0 1px color-mix(in srgb, var(--rc-alert) 45%, transparent), var(--ha-card-box-shadow, none); }
 
   .head { display: flex; align-items: center; gap: 10px; }

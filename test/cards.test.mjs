@@ -112,8 +112,9 @@ test("full card: the next event in big, then those coming up", async () => {
   );
   assert.equal(m.state, "soon");
   const html = card.shadowRoot.innerHTML;
-  assert.match(html, /<span class="bpt">In 3 days<\/span>/);
-  assert.match(html, /<div class="subt">Wed, Nov 25<\/div>/);
+  // The header repeats nothing of the hero: no status pill, today's date as its subtitle.
+  assert.doesNotMatch(html, /class="bpill"/);
+  assert.match(html, /<div class="subt">Sun, Nov 22<\/div>/);
   assert.match(html, /<span class="bn">3<\/span><span class="bu">days<\/span>/);
   assert.match(html, /<span class="hn">Sam&#39;s birthday — turns 9<\/span>/);
   assert.match(html, /<span class="rp">27 days<\/span>/);
@@ -126,8 +127,8 @@ test("today, tomorrow and nothing coming up", async () => {
   assert.equal(today._items.state, "today");
   assert.match(today.shadowRoot.innerHTML, /<span class="bn0">Today!<\/span>/);
   assert.match(today.shadowRoot.innerHTML, /class="lvl-event st-today today"/);
+  assert.doesNotMatch(today.shadowRoot.innerHTML, /class="subt"/, "on the day, today's date is the event's: no subtitle");
   const tomorrow = await make("countdown-card", { events: [{ name: "Party", date: "2026-11-23" }] });
-  assert.match(tomorrow.shadowRoot.innerHTML, /<span class="bpt">Tomorrow<\/span>/);
   assert.match(tomorrow.shadowRoot.innerHTML, /<span class="bn">1<\/span><span class="bu">day<\/span>/);
   const none = await make("countdown-card", { events: [{ name: "Far", date: "2028-01-01" }] });
   assert.equal(none._items.state, "none");
@@ -141,18 +142,21 @@ test("days_ahead and max_items", async () => {
 
 test("plurals: the few form where the language has one", async () => {
   const hass = makeHass({ language: "ru", locale: { language: "ru" } });
-  const card = await make("countdown-card", { events: [{ name: "Отпуск", date: "2026-11-25" }] }, hass);
+  const card = await make("countdown-mini-card", { events: [{ name: "Отпуск", date: "2026-11-25" }] }, hass);
   assert.match(card.shadowRoot.innerHTML, /Через 3 дня/);
+  card._zoomed = true;
+  card._sig = null;
+  card._render();
   assert.match(card.shadowRoot.innerHTML, /<span class="bn">3<\/span><span class="bu">дня<\/span>/);
 });
 
-test("mini card: when, the name and the age as chips, and the calendar page", async () => {
+test("mini card: when, the name and the age on one line, and the calendar page", async () => {
   const card = await make("countdown-mini-card", ALL);
   const html = card.shadowRoot.innerHTML;
   assert.match(html, /<ha-card class="lvl-birthday st-soon bn">/);
   assert.match(html, /<span class="bpt">In 3 days<\/span>/);
-  assert.match(html, /<span>Sam&#39;s birthday<\/span>/);
-  assert.match(html, /<span>turns 9<\/span>/);
+  assert.match(html, /<button class="subt evt"[^>]*>Sam&#39;s birthday — turns 9<\/button>/);
+  assert.doesNotMatch(html, /class="r"/, "no chips");
   assert.match(html, />NOV<\/text>/);
   assert.match(html, />25<\/text>/);
   card._zoomed = true;
